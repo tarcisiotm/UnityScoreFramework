@@ -74,7 +74,33 @@ namespace Score{
 			return false;
 		}
 
+		public bool DeleteFile(string file, out string output)
+		{
+			output = "here";	
+			string fileName = Application.persistentDataPath + "/" + file;
+			try
+			{
+				//UnityEditor.FileUtil.DeleteFileOrDirectory(fileName);
+				File.Delete(fileName);
+				output += "here";
+				return true;
+			}
+			catch (IOException ex)
+			{
+				output += ex.Message.ToString ();
+				return false;
+			}
+		}
 
+		public void DeleteAllFiles()
+		{
+			string[] files = Directory.GetFiles (Application.persistentDataPath + "/");
+			string output = "";
+			for (int i = 0; i < files.Length; i++)
+			{
+				DeleteFile (files [i],out output);
+			}
+		}
 			
 	}
 }

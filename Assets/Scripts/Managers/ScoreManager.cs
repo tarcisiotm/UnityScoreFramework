@@ -7,18 +7,17 @@ namespace Score{
 
 		[Header("Options")]
 		[Tooltip("Max number of scores to be saved.")]
-		int m_maxNumberScore = 2;
+		int m_maxNumberScore = 10;
 
 		public override void Awake()
 		{
 			base.Awake ();
-			//Test ();
 		}
 
 		// Use this for initialization
 		void Start ()
 		{
-			Test2 ();
+			//Test2 ();
 		}
 
 		void AddScore(Leaderboard leaderboard, Score score)
@@ -125,8 +124,6 @@ namespace Score{
 
 			AddScore (leaderboard, score);
 			AddScore (leaderboard, score2);
-
-			//SaveToDisk (leaderboard);
 
 			print (JsonUtility.ToJson (leaderboard));
 		}
