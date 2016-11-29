@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\JSON\Score.cs" />
      <Compile Include="Assets\Scripts\JSON\Scores.cs" />
      <Compile Include="Assets\Scripts\ScoreManager.cs" />
+     <Compile Include="Assets\Scripts\Singleton.cs" />
      <Compile Include="Assets\Scripts\utils\IOManager.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

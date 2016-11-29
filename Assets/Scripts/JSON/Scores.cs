@@ -9,7 +9,6 @@ namespace Score{
 	public class Scores {
 
 		public Score m_highestScore;
-		public Score m_lowestScore;
 		public List<Leaderboard> m_leaderboards;
 		public List<Score> m_scores;
 
