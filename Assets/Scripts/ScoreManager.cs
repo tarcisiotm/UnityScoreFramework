@@ -7,7 +7,7 @@ namespace Score{
 
 		[Header("Options")]
 		[Tooltip("Max number of scores to be saved.")]
-		int m_maxNumberScore = 10;
+		int m_maxNumberScore = 2;
 
 		public override void Awake()
 		{
@@ -23,12 +23,23 @@ namespace Score{
 
 		void AddScore(Leaderboard leaderboard, Score score)
 		{
-			leaderboard.AddScore (score);
-		}
+			if (leaderboard.HighestScore == null) {
+				print ("Highscore is null");
+			}
+			if (leaderboard.HighestScore == null || score.GetScore() > leaderboard.HighestScore.GetScore())
+			{
+				print ("Setting highest score");
+				leaderboard.SetHighScore (score);
+			}
 
-		Score GetHighestScore(Leaderboard leaderboard)
-		{
-			return leaderboard.HighestScore;
+			if (leaderboard.m_scoreList.Count == m_maxNumberScore && m_maxNumberScore > 0)
+			{
+				Debug.Log ("Max size. Removing oldest entry.");
+				leaderboard.m_scoreList.RemoveAt (0);
+			}
+
+			leaderboard.AddScore (score);
+			SaveToDisk (leaderboard);
 		}
 
 		Leaderboard CreateLeaderboard(string name)
@@ -40,6 +51,7 @@ namespace Score{
 			}
 
 			Leaderboard leaderboard = new Leaderboard (name);
+			//leaderboard.m_scoreList = new System.Collections.Generic.List<Score> ();
 			SaveToDisk (leaderboard);
 
 			return leaderboard;
@@ -69,10 +81,12 @@ namespace Score{
 		{
 			if (LeaderboardAlreadyExists (name))
 			{
+				print ("Loading leaderboard");
 				return LoadLeaderboard (name);
 			}
 			else
 			{
+				print ("Creating leaderboard");
 				return CreateLeaderboard(name);
 			}
 		}
@@ -106,13 +120,13 @@ namespace Score{
 		{
 			Leaderboard leaderboard = LoadOrCreateLeaderboard ("Stage 1");
 
-			Score score = new Score (25, "Stage 1 part 1", DateTime.Now.ToShortTimeString());
-			Score score2 = new Score (50, "Stage 1 part 2", DateTime.Now.ToShortTimeString());
+			Score score = new Score (65, "Stage 1 part 1", DateTime.Now.ToShortTimeString());
+			Score score2 = new Score (21, "Stage 1 part 2", DateTime.Now.ToShortTimeString());
 
-			leaderboard.AddScore (score);
-			leaderboard.AddScore (score2);
+			AddScore (leaderboard, score);
+			AddScore (leaderboard, score2);
 
-			SaveToDisk (leaderboard);
+			//SaveToDisk (leaderboard);
 
 			print (JsonUtility.ToJson (leaderboard));
 		}

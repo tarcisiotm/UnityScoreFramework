@@ -57,6 +57,7 @@ namespace Score{
 
 		public bool FileExists(string name)
 		{
+			//"*.txt"
 			System.IO.Directory.CreateDirectory ("" + Application.persistentDataPath + "/Scores");
 
 			string[] files = Directory.GetFiles (Application.persistentDataPath + m_pathToFile);

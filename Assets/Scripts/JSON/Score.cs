@@ -17,5 +17,10 @@ namespace Score{
 		public string m_description;
 		public string m_dateTime;
 
+		public int GetScore()
+		{
+			return m_score;
+		}
+
 	}
 }
