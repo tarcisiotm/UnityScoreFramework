@@ -5,9 +5,9 @@ using System;
 namespace Score{
 	public class ScoreManager : Singleton<ScoreManager> {
 
-		[Header("Options")]
-		[Tooltip("Max number of scores to be saved.")]
-		int m_maxNumberScore = 10;
+		//[Header("Options")]
+		//[Tooltip("Max number of scores to be saved.")]
+		//int m_maxNumberScore = 10;
 
 		public override void Awake()
 		{
@@ -17,27 +17,18 @@ namespace Score{
 		// Use this for initialization
 		void Start ()
 		{
-			//Test2 ();
+			Test2 ();
 		}
 
 		void AddScore(Leaderboard leaderboard, Score score)
 		{
-			if (leaderboard.HighestScore == null) {
-				print ("Highscore is null");
-			}
-			if (leaderboard.HighestScore == null || score.GetScore() > leaderboard.HighestScore.GetScore())
-			{
-				print ("Setting highest score");
-				leaderboard.SetHighScore (score);
+			string output;
+			leaderboard.AddScore (score, out output);
+
+			if (output != String.Empty) {
+				print (output);
 			}
 
-			if (leaderboard.m_scoreList.Count == m_maxNumberScore && m_maxNumberScore > 0)
-			{
-				Debug.Log ("Max size. Removing oldest entry.");
-				leaderboard.m_scoreList.RemoveAt (0);
-			}
-
-			leaderboard.AddScore (score);
 			SaveToDisk (leaderboard);
 		}
 
@@ -66,13 +57,13 @@ namespace Score{
 		bool SaveToDisk(Leaderboard leaderboard, bool overwrite = true)
 		{
 			string scoreJson = JsonUtility.ToJson (leaderboard);
-			return IOManager.Instance.SaveFile (leaderboard.m_leaderboardName, scoreJson);
+			return IOManager.Instance.SaveBytesToFile (leaderboard.m_leaderboardName, scoreJson);
 		}
 
 		Leaderboard LoadLeaderboard(string name)
 		{
 			Leaderboard leaderboard = null;
-			IOManager.Instance.LoadFile (name, out leaderboard);
+			IOManager.Instance.LoadBinaryFile(name, out leaderboard);
 			return leaderboard;
 		}
 
@@ -95,7 +86,7 @@ namespace Score{
 		#region Test
 		void Test()
 		{
-			//scores.m_leaderboards = new System.Collections.Generic.List<Leaderboard> ();
+			/*//scores.m_leaderboards = new System.Collections.Generic.List<Leaderboard> ();
 
 			Leaderboard leaderboard = new Leaderboard ();
 
@@ -112,11 +103,13 @@ namespace Score{
 
 			print (JsonUtility.ToJson (leaderboard));
 			print (JsonUtility.ToJson (score));
+			*/
 		}
 		#endregion Test
 
 		void Test2()
 		{
+			XOREncrypt.Test ();
 			Leaderboard leaderboard = LoadOrCreateLeaderboard ("Stage 1");
 
 			Score score = new Score (65, "Stage 1 part 1", DateTime.Now.ToShortTimeString());
@@ -125,7 +118,7 @@ namespace Score{
 			AddScore (leaderboard, score);
 			AddScore (leaderboard, score2);
 
-			print (JsonUtility.ToJson (leaderboard));
+			//print (JsonUtility.ToJson (leaderboard));
 		}
 
 	}
