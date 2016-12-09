@@ -102,11 +102,12 @@ namespace Score
 				encrypted = File.ReadAllBytes (fileName); //TODO Read in chunks
 
 				const int chunkSize = 1024; // read the file by chunks of 1KB
+
 				using (var file = File.OpenRead(fileName))
 				{
-					int bytesRead;
+					//int bytesRead;
 					var buffer = new byte[chunkSize];
-					while ((bytesRead = file.Read(buffer, 0, buffer.Length)) > 0)
+					while ((file.Read(buffer, 0, buffer.Length)) > 0) //bytesread = 
 					{
 						
 					}
