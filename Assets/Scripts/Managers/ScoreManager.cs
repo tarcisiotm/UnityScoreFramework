@@ -109,7 +109,7 @@ namespace Score{
 
 		void Test2()
 		{
-			XOREncrypt.Test ();
+			//XOREncrypt.Test ();
 			Leaderboard leaderboard = LoadOrCreateLeaderboard ("Stage 1");
 
 			Score score = new Score (65, "Stage 1 part 1", DateTime.Now.ToShortTimeString());

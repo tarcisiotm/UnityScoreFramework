@@ -4,9 +4,11 @@
 [Tt]emp/
 [Oo]bj/
 [Bb]uild
+[Pp]rojectSettings/
 /[Ll]ibrary/
 sysinfo.txt
 *.stackdump
+/Assets/AssetStoreTools*
  
 # ============================================= #
 # Visual Studio / MonoDevelop / Rider generated #
@@ -22,6 +24,8 @@ sysinfo.txt
 /*.unityproj
 /*.booproj
 /.idea*/
+*.tmp
+*.svd
  
 # ============ #
 # OS generated #
@@ -34,4 +38,14 @@ ehthumbs.db
 [Tt]humbs.db
 [Dd]esktop.ini
 
-#Source: https://gist.github.com/kleber-swf/6e62de2ed95cd2c0f2de
+# Unity3D generated meta files
+*.pidb.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# Builds
+*.apk
+*.unitypackage
+
+#Modified from: https://gist.github.com/kleber-swf/6e62de2ed95cd2c0f2de
