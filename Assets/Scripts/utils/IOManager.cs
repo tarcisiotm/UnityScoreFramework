@@ -73,8 +73,8 @@ namespace Score
 				print("Unique ID: "+SystemInfo.deviceUniqueIdentifier);
 				byte[] encrypted = XOREncrypt.EncryptStringToBytes (fileToSave);
 
-				int numChunks = 1024;
-				int chunkSize = (encrypted.Length) / numChunks;
+				//int numChunks = 1024;
+				//int chunkSize = (encrypted.Length) / numChunks;
 
 				using (BinaryWriter binaryWriter = new BinaryWriter (File.Open (path, FileMode.OpenOrCreate))) { //overwrite ? File.CreateText(path) : File.AppendText(path)
 					//TODO write in chunks
