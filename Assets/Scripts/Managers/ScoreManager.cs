@@ -12,15 +12,20 @@ namespace Score{
 		public override void Awake()
 		{
 			base.Awake ();
+			//IOManager.DeleteAllFiles();
 		}
 
 		// Use this for initialization
 		void Start ()
 		{
-			Test2 ();
+			//Test2 ();
 		}
 
-		void AddScore(Leaderboard leaderboard, Score score)
+		public void AddScore(string p_leaderboardName, Score p_score){
+			AddScore(LoadOrCreateLeaderboard(p_leaderboardName), p_score);
+		}
+
+		public void AddScore(Leaderboard leaderboard, Score score)
 		{
 			string output;
 			leaderboard.AddScore (score, out output);
@@ -51,19 +56,23 @@ namespace Score{
 
 		bool LeaderboardAlreadyExists(string name)
 		{
-			return IOManager.Instance.FileExists (name);
+			return IOManager.FileExists (name);
 		}
 
 		bool SaveToDisk(Leaderboard leaderboard, bool overwrite = true)
 		{
+			if(leaderboard.Scores.Count == 0){
+				Debug.LogWarning("No scores to save!");
+				return false;
+			}
 			string scoreJson = JsonUtility.ToJson (leaderboard);
-			return IOManager.Instance.SaveBytesToFile (leaderboard.m_leaderboardName, scoreJson);
+			return IOManager.SaveFile (leaderboard.m_leaderboardName, scoreJson);
 		}
 
 		Leaderboard LoadLeaderboard(string name)
 		{
 			Leaderboard leaderboard = null;
-			IOManager.Instance.LoadBinaryFile(name, out leaderboard);
+			IOManager.LoadFile(name, out leaderboard);
 			return leaderboard;
 		}
 
@@ -109,14 +118,14 @@ namespace Score{
 
 		void Test2()
 		{
-			XOREncrypt.Test ();
-			Leaderboard leaderboard = LoadOrCreateLeaderboard ("Stage 1");
+			//XOREncrypt.Test ();
+			//Leaderboard leaderboard = LoadOrCreateLeaderboard ("Stage 1");
 
-			Score score = new Score (65, "Stage 1 part 1", DateTime.Now.ToShortTimeString());
-			Score score2 = new Score (21, "Stage 1 part 2", DateTime.Now.ToShortTimeString());
+			//Score score = new Score (65, "Stage 1 part 1", DateTime.Now.ToShortTimeString());
+			//Score score2 = new Score (21, "Stage 1 part 2", DateTime.Now.ToShortTimeString());
 
-			AddScore (leaderboard, score);
-			AddScore (leaderboard, score2);
+			//AddScore (leaderboard, score);
+			//AddScore (leaderboard, score2);
 
 			//print (JsonUtility.ToJson (leaderboard));
 		}

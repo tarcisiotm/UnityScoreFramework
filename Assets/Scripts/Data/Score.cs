@@ -5,21 +5,24 @@ using System;
 namespace Score{
 	[Serializable]
 	public class Score {
-
-		public Score(int score, string description = "", string dateTime = "" )
+        
+		public Score(int score,string dateTime = "" )
 		{
+			Debug.Log("Score: "+score.ToString());
 			m_score = score;
-			m_description = description;
 			m_dateTime = dateTime;
 		}
-
+        
 		public int m_score;
-		public string m_description;
 		public string m_dateTime;
-
-		public int GetScore()
-		{
+        
+		public object GetScore(){
 			return m_score;
+		}
+        
+		public int GetIntScore()
+		{
+			return (int)m_score;
 		}
 
 	}

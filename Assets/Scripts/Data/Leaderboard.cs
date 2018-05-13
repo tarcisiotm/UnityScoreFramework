@@ -22,8 +22,11 @@ namespace Score{
 
 		public Score HighestScore {get {return m_highestScore;}}
 
+		public List<Score> Scores { get { return m_scoreList; }}
+
 		//TODO change to stack and see if it is supported
-		public List<Score> m_scoreList;
+		[SerializeField]
+		List<Score> m_scoreList;
 
 		public Leaderboard(string name = "", int maxNumberOfScores = 10, bool higherIsBigger = true)
 		{
@@ -32,9 +35,11 @@ namespace Score{
 			m_highestScore = null;
 		}
 
-		public void AddScore(Score score, out string output)
+		public bool AddScore(Score score, out string output)
 		{
+			bool shouldBeAdded = false;
 			output = String.Empty;
+
 
 			CheckHighScore (score);
 
@@ -45,13 +50,49 @@ namespace Score{
 			}
 
 			m_scoreList.Add (score);
+
+			return shouldBeAdded;
+		}
+
+		public bool ShouldBeAdded(Score score){
+			PrintList();
+			//should be compare method...
+			if(m_scoreList.Count == 0){
+				Debug.Log(score.GetIntScore()+"");
+				m_scoreList.Add(score);
+				return true;
+			}
+
+			int lastIndex = m_scoreList.Count - 1;
+
+			if(m_scoreList[lastIndex].GetIntScore() < score.GetIntScore()){
+				m_scoreList.Add(score);
+				m_scoreList.Sort();
+
+				if (m_scoreList.Count > m_maxNumberScores)
+				{
+					m_scoreList.RemoveAt(lastIndex + 1);
+				}
+
+				PrintList();
+
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		void PrintList(){
+			foreach(Score s in m_scoreList){
+				Debug.Log("Score: "+s.GetScore());
+			}
 		}
 
 		public void CheckHighScore(Score score)
 		{
 			if( (m_highestScore == null) ||
-				(score.GetScore() > m_highestScore.GetScore() && m_biggerIsHigher) ||
-				(score.GetScore() < m_highestScore.GetScore() && !m_biggerIsHigher))
+			   (score.GetIntScore() > m_highestScore.GetIntScore() && m_biggerIsHigher) ||
+			   (score.GetIntScore() < m_highestScore.GetIntScore() && !m_biggerIsHigher))
 			{
 				m_highestScore = score;
 			}

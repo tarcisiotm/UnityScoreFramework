@@ -6,12 +6,12 @@ using System.Text;
 
 namespace Score
 {
-	public class IOManager : Singleton<IOManager>
+	public static class IOManager
 	{
+        
+		static string m_pathToFile = "/Scores/";
 
-		readonly string m_pathToFile = "/Scores/";
-
-		public bool SaveFile (string fileName, string fileToSave, bool overwrite = true)
+		public static bool SaveFile (string fileName, string fileToSave, bool overwrite = true)
 		{ 
 			//output = obj.ToJsonPrettyPrintString ();
 			//print ("output: " + fileToSave);
@@ -29,8 +29,8 @@ namespace Score
 				return false;
 			}
 		}
-
-		public bool LoadFile (string nameOfFile, out Leaderboard leaderboard)
+        
+		public static bool LoadFile (string nameOfFile, out Leaderboard leaderboard)
 		{
 			string output = String.Empty;
 			leaderboard = new Leaderboard ();
@@ -46,16 +46,20 @@ namespace Score
 						output += line;
 					}
 
-					print ("?: " + output);
+					Debug.Log ("?: " + output);
 					//output = XOREncrypt.DecryptStringFromBytes(output);
-					print ("Output: " + output);
+					Debug.Log  ("Output: " + output);
 					leaderboard = JsonUtility.FromJson<Leaderboard> (output);
-					print ("Reading from file: " + output);
+					Debug.Log  ("Reading from file: " + output);
+					Debug.Log("High: " + leaderboard.m_leaderboardName);
+                    
+					Debug.Log("High: " + leaderboard.HighestScore.GetIntScore());
+                    
 					return true;
 				}
 			} catch (System.Exception ex) {
 				output = "Exceção de IO na leitura: " + ex.Message;
-				print ("Deu merda");
+				Debug.Log  ("Deu merda");
 				return false;
 			}
 		}
@@ -64,13 +68,13 @@ namespace Score
 
 		//private static readonly int CHUNK_SIZE = 1024;
 
-		public bool SaveBytesToFile (string fileName, string fileToSave, bool overwrite = true)
+		public static bool SaveBytesToFile (string fileName, string fileToSave, bool overwrite = true)
 		{ 
 			string path = Application.persistentDataPath + m_pathToFile + fileName;
 
 			try {
 				//fileToSave = XOREncrypt.EncryptStringToBytes(fileToSave); //TODO SCRAMBLE this with unique ID from device
-				print("Unique ID: "+SystemInfo.deviceUniqueIdentifier);
+				Debug.Log("Unique ID: "+SystemInfo.deviceUniqueIdentifier);
 				byte[] encrypted = XOREncrypt.EncryptStringToBytes (fileToSave);
 				using (BinaryWriter binaryWriter = new BinaryWriter (File.Open (path, FileMode.OpenOrCreate))) { //overwrite ? File.CreateText(path) : File.AppendText(path)
 					//TODO write in chunks
@@ -83,7 +87,7 @@ namespace Score
 			}
 		}
 
-		public bool LoadBinaryFile (string nameOfFile, out Leaderboard leaderboard)
+		public static bool LoadBinaryFile (string nameOfFile, out Leaderboard leaderboard)
 		{
 			string output = String.Empty;
 			leaderboard = new Leaderboard ();
@@ -98,20 +102,21 @@ namespace Score
 
 				output = XOREncrypt.DecryptStringFromBytes (encrypted);
 
-				print ("Output: " + output);
+				Debug.Log  ("Output: " + output);
 				leaderboard = JsonUtility.FromJson<Leaderboard> (output);
-				print ("Reading from file: " + output);
+				Debug.Log  ("Reading from file: " + output);
+				Debug.Log("High: " + leaderboard.HighestScore.GetIntScore());
 				return true;
 
 			} catch (System.Exception ex) {
 				output = "Exceção de IO na leitura: " + ex.Message;
-				print ("Deu merda");
+				Debug.Log  ("Deu merda");
 				return false;
 			}
 		}
 		#endregion Binary
 
-		public bool FileExists (string name)
+		public static bool FileExists (string name)
 		{
 			//"*.txt"
 			System.IO.Directory.CreateDirectory ("" + Application.persistentDataPath + "/Scores");
@@ -128,7 +133,7 @@ namespace Score
 			return false;
 		}
 
-		public bool DeleteFile (string file, out string output)
+		public static bool DeleteFile (string file, out string output)
 		{
 			output = "here";	
 			string fileName = Application.persistentDataPath + "/" + file;
@@ -143,7 +148,7 @@ namespace Score
 			}
 		}
 
-		public void DeleteAllFiles ()
+		public static void DeleteAllFiles ()
 		{
 			string[] files = Directory.GetFiles (Application.persistentDataPath + "/");
 			string output = "";
