@@ -76,11 +76,16 @@ namespace Score
 				//fileToSave = XOREncrypt.EncryptStringToBytes(fileToSave); //TODO SCRAMBLE this with unique ID from device
 				Debug.Log("Unique ID: "+SystemInfo.deviceUniqueIdentifier);
 				byte[] encrypted = XOREncrypt.EncryptStringToBytes (fileToSave);
+
+				//int numChunks = 1024;
+				//int chunkSize = (encrypted.Length) / numChunks;
+
 				using (BinaryWriter binaryWriter = new BinaryWriter (File.Open (path, FileMode.OpenOrCreate))) { //overwrite ? File.CreateText(path) : File.AppendText(path)
 					//TODO write in chunks
 					binaryWriter.Write (encrypted);
 					return true;
 				}
+
 			} catch (System.Exception ex) {
 				fileToSave = "Exceção de IO na escrita: " + ex.Message;
 				return false;
@@ -100,6 +105,20 @@ namespace Score
 				byte[] encrypted;
 				encrypted = File.ReadAllBytes (fileName); //TODO Read in chunks
 
+				const int chunkSize = 1024; // read the file by chunks of 1KB
+
+				using (var file = File.OpenRead(fileName))
+				{
+					//int bytesRead;
+					var buffer = new byte[chunkSize];
+					while ((file.Read(buffer, 0, buffer.Length)) > 0) //bytesread = 
+					{
+						
+					}
+				}
+
+				const int bufferSize = 4096;
+			
 				output = XOREncrypt.DecryptStringFromBytes (encrypted);
 
 				Debug.Log  ("Output: " + output);
