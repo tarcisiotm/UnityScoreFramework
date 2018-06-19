@@ -21,11 +21,11 @@ namespace Score{
 			//Test2 ();
 		}
 
-		public void AddScore(string p_leaderboardName, Score p_score){
+		public void AddScore(string p_leaderboardName, SerigyScore p_score){
 			AddScore(LoadOrCreateLeaderboard(p_leaderboardName), p_score);
 		}
 
-		public void AddScore(Leaderboard leaderboard, Score score)
+		public void AddScore(Leaderboard leaderboard, SerigyScore score)
 		{
 			string output;
 			leaderboard.AddScore (score, out output);
@@ -36,6 +36,19 @@ namespace Score{
 
 			SaveToDisk (leaderboard);
 		}
+
+		public void AddScore<T>(Leaderboard leaderboard, T score)
+        {
+            string output;
+			leaderboard.AddScore(score as SerigyScore, out output);
+
+            if (output != String.Empty)
+            {
+                print(output);
+            }
+
+            SaveToDisk(leaderboard);
+        }
 
 		Leaderboard CreateLeaderboard(string name)
 		{
@@ -76,7 +89,7 @@ namespace Score{
 			return leaderboard;
 		}
 
-		Leaderboard LoadOrCreateLeaderboard(string name)
+		public Leaderboard LoadOrCreateLeaderboard(string name)
 		{
 			if (LeaderboardAlreadyExists (name))
 			{

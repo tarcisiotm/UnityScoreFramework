@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Score{
 	
@@ -15,63 +16,69 @@ namespace Score{
 		bool m_biggerIsHigher = true;
 
 		[SerializeField]
-		Score m_highestScore = null;
+		SerigyScore m_highestScore = null;
 
 		[SerializeField]
-		int m_maxNumberScores = 10;
+		int m_maxNumberScores = 5;
 
 		public Score HighestScore {get {return m_highestScore;}}
 
-		public List<Score> Scores { get { return m_scoreList; }}
+		public List<SerigyScore> Scores { get { return m_scoreList; }}
 
 		//TODO change to stack and see if it is supported
 		[SerializeField]
-		List<Score> m_scoreList;
+		List<SerigyScore> m_scoreList;
 
-		public Leaderboard(string name = "", int maxNumberOfScores = 10, bool higherIsBigger = true)
+		public Leaderboard(string name = "", int maxNumberOfScores = 5, bool higherIsBigger = true)
 		{
 			m_leaderboardName = name;
-			m_scoreList = new List<Score> ();
+			m_scoreList = new List<SerigyScore> ();
 			m_highestScore = null;
 		}
 
-		public bool AddScore(Score score, out string output)
+		public bool AddScore(SerigyScore score, out string output)
 		{
-			bool shouldBeAdded = false;
+			bool shouldBeAdded = ShouldBeAdded(score);
 			output = String.Empty;
 
+			CheckHighestScore (score);
 
-			CheckHighScore (score);
+			//if (m_scoreList.Count == m_maxNumberScores && m_maxNumberScores > 0)
+			//{
+			//	output += "  Max size. Removing oldest entry.";
+			//	m_scoreList.RemoveAt (0);
+			//}
 
-			if (m_scoreList.Count == m_maxNumberScores && m_maxNumberScores > 0)
-			{
-				output += "  Max size. Removing oldest entry.";
-				m_scoreList.RemoveAt (0);
-			}
-
-			m_scoreList.Add (score);
+			//m_scoreList.Add (score);
 
 			return shouldBeAdded;
 		}
 
-		public bool ShouldBeAdded(Score score){
+		public bool ShouldBeAdded(SerigyScore score, bool p_add = true){
 			PrintList();
 			//should be compare method...
 			if(m_scoreList.Count == 0){
 				Debug.Log(score.GetIntScore()+"");
-				m_scoreList.Add(score);
+				if (p_add)
+				{
+					m_scoreList.Add(score);
+				}
 				return true;
 			}
-
+            
 			int lastIndex = m_scoreList.Count - 1;
 
-			if(m_scoreList[lastIndex].GetIntScore() < score.GetIntScore()){
-				m_scoreList.Add(score);
-				m_scoreList.Sort();
-
-				if (m_scoreList.Count > m_maxNumberScores)
+			if(m_scoreList.Count < m_maxNumberScores || m_scoreList[lastIndex].GetIntScore() < score.GetIntScore()){
+				if (p_add)
 				{
-					m_scoreList.RemoveAt(lastIndex + 1);
+					m_scoreList.Add(score);
+					m_scoreList.Sort();
+					m_scoreList.Reverse();
+
+					if (m_scoreList.Count > m_maxNumberScores)
+					{
+						m_scoreList.RemoveAt(lastIndex + 1);
+					}
 				}
 
 				PrintList();
@@ -83,12 +90,12 @@ namespace Score{
 		}
 
 		void PrintList(){
-			foreach(Score s in m_scoreList){
+			foreach(SerigyScore s in m_scoreList){
 				Debug.Log("Score: "+s.GetScore());
 			}
 		}
 
-		public void CheckHighScore(Score score)
+		public void CheckHighestScore(SerigyScore score)
 		{
 			if( (m_highestScore == null) ||
 			   (score.GetIntScore() > m_highestScore.GetIntScore() && m_biggerIsHigher) ||
